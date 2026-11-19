@@ -36,6 +36,10 @@ textarea{width:100%;height:330px;resize:vertical;font-family:ui-monospace,SFMono
 .panel li{margin:0 0 4px}
 .warn{color:var(--bad)}
 .good{color:var(--ok)}
+.chk{color:#5A4A00}
+.sev{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:1px 8px;margin-right:4px}
+.sev.error{background:var(--badbg);color:var(--bad);border:1px solid #F0C9B4}
+.sev.check{background:#FFF4CC;color:#5A4A00;border:1px solid #F0DC8C}
 code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
 .item{border-top:1px solid var(--line);padding:12px 0 4px}
 .item:first-of-type{border-top:0}
@@ -62,77 +66,112 @@ footer{margin:14px 12px 0;font-size:12.5px;color:var(--mut)}
 <div class="wrap">
 <header><p class="kick">Try it · about 10 minutes · Module 1</p><h1>Source and structure, then Find the error</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded.</p></header>
 <section aria-labelledby="h-a"><h2 id="h-a">1. Source and structure</h2>
-<p>Edit the source on the left. The panel on the right shows what LaTeX will build and flags common problems. Try deleting a closing brace, typing 5% in a sentence, or misspelling \section. These checks are a quick guide, not a compiler: the compile in Overleaf is the final check.</p>
+<p>Edit the source on the left. The panel on the right shows what LaTeX will build and flags common problems. Try deleting a closing brace, typing 5% in a sentence, or misspelling \section. <strong>LaTeX error</strong> means LaTeX itself will report a problem there. <strong>Check</strong> means this tool is not sure, so look at it in Overleaf. The tool is a quick guide, not a compiler: the compile in Overleaf is the final check.</p>
 <div class="btns"><button type="button" id="reset" class="alt">Reset the example</button><button type="button" id="broken">Load a version with problems</button></div>
 <div class="grid"><div><label class="lab" for="src">LaTeX source</label><textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></div>
 <div class="panel" aria-live="polite"><h3>What LaTeX will build</h3><ul id="outline"></ul><h3>Quick checks</h3><ul id="checks"></ul></div></div>
 </section>
 <section aria-labelledby="h-b"><h2 id="h-b">2. Find the error</h2>
-<p>Each snippet failed to compile. Read the message, pick the change that fixes it, then check your answer.</p>
+<p>Overleaf reported an error for each snippet. Read the message, pick the change that fixes it, then check your answer.</p>
 <div id="items"></div><p class="score" id="score" role="status" aria-live="polite">You have 0 of 5 right.</p>
 </section>
 <footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Licensed CC BY 4.0.</footer>
 </div>
 <script>
 (function(){
-var GOOD="\\documentclass{article}\n\n\\title{Sheet Resistance of Doped Silicon}\n\\author{Your Name}\n\\date{\\today}\n\n\\begin{document}\n\n\\maketitle\n\n\\begin{abstract}\nWe measured four boron-doped wafers with a four-point probe.\n\\end{abstract}\n\n\\section{Introduction}\nSheet resistance shows how well a doped layer conducts.\n\n\\section{Methods}\nWe used Ohm's law, $V = IR$, at five points per wafer:\n\\[\nR_s = \\frac{\\pi}{\\ln 2} \\frac{V}{I}\n\\]\n\n\\section{Results}\n\\begin{itemize}\n  \\item The mean fell from 112 to 38 ohms per square.\n  \\item The spread stayed below 4\\%.\n\\end{itemize}\n\n\\section{Conclusion}\nThe doping step gives uniform layers.\n\n\\end{document}\n", BAD="\\documentclass{article}\n\n\\title{Sheet Resistance of Doped Silicon}\n\\author{Your Name}\n\n\\begin{document}\n\n\\usepackage{graphicx}\n\n\\begin{abstract}\nWe measured four wafers and the spread stayed below 4% across each wafer.\n\\end{abstract}\n\n\\sectoin{Introduction}\nSmith & Jones measured the same wafers.\n\n\\section{Results}\nThe value of R_s fell as the \\textbf{dose rose.\n\n\\end{document}\n", ITEMS=[{"code": "\\section{Introduction}\nWhy this report matters.\n\\sectoin{Results}\nThe values agree.", "err": "! Undefined control sequence.\nl.3 \\sectoin", "opts": ["Add \\usepackage{sectoin} to the preamble", "Change \\sectoin to \\section on line 3", "Delete line 3", "Add a blank line before line 3"], "ok": 1, "why": "Undefined control sequence means LaTeX does not know the command on that line. \\sectoin is a misspelling of \\section, so correct the spelling. A package only helps when the command is real but not loaded."}, {"code": "We recorded the \\textbf{thickness in nanometres.\n\n\\section{Results}\nThe three wafers agree.", "err": "! File ended while scanning use of \\textbf.", "opts": ["Replace \\textbf with \\emph", "Delete the blank line after line 1", "Close the brace: \\textbf{thickness in nanometres}.", "Add \\end{document} after line 1"], "ok": 2, "why": "The argument of \\textbf was opened with { but never closed, so LaTeX read to the end of the file looking for the }. Add the closing brace where the bold text should end."}, {"code": "Smith & Jones (2024) measured the same wafers.", "err": "! Misplaced alignment tab character &.", "opts": ["Write Smith \\& Jones", "Put the sentence in a table", "Write Smith && Jones", "Load a package for the ampersand"], "ok": 0, "why": "In LaTeX, & separates columns in a table. To print the character in text, escape it as \\&."}, {"code": "The sheet resistance R_s fell as the dose rose.", "err": "! Missing $ inserted.", "opts": ["Add \\usepackage{amsmath}", "Delete the space before R_s", "Write R\\_s instead", "Write $R_s$, so the subscript is in math mode"], "ok": 3, "why": "_ makes a subscript, which only works in math mode. $R_s$ typesets R with a subscript s. R\\_s would compile, but it prints an underscore, not a subscript."}, {"code": "\\begin{document}\n\\usepackage{amsmath}\n\\maketitle", "err": "! LaTeX Error: Can be used only in preamble.", "opts": ["Move \\maketitle above \\begin{document}", "Move \\usepackage{amsmath} above \\begin{document}", "Delete \\begin{document}", "Move \\usepackage{amsmath} after \\end{document}"], "ok": 1, "why": "Packages are loaded in the preamble, before \\begin{document}. Move the line up and the error disappears."}];
+var GOOD="\\documentclass{article}\n\n\\title{Sheet Resistance of Doped Silicon}\n\\author{Your Name}\n\\date{\\today}\n\n\\begin{document}\n\n\\maketitle\n\n\\begin{abstract}\nWe measured four boron-doped wafers with a four-point probe.\n\\end{abstract}\n\n\\section{Introduction}\nSheet resistance shows how well a doped layer conducts.\n\n\\section{Methods}\nWe used Ohm's law, \\(V = IR\\), at five points per wafer and saved\nthe readings in \\texttt{wafers.csv}:\n\\[\nR_s = \\frac{\\pi}{\\ln 2} \\frac{V}{I}\n\\]\n\n\\section{Results}\n\\begin{itemize}\n  \\item The mean fell from 112 to 38 ohms per square.\n  \\item On each wafer, the readings stayed within 4\\% of its mean.\n\\end{itemize}\n\n\\section{Conclusion}\nThe sampled wafers showed limited variation.\n\n\\end{document}\n", BAD="\\documentclass{article}\n\n\\title{Sheet Resistance of Doped Silicon}\n\\author{Your Name}\n\n\\begin{document}\n\n\\usepackage{graphicx}\n\n\\begin{abstract}\nWe measured four wafers and the spread stayed below 4% across each wafer.\n\\end{abstract}\n\n\\sectoin{Introduction}\nSmith & Jones measured the same wafers.\n\n\\section{Results}\nThe value of R_s fell as the \\textbf{dose rose.\n\n\\end{document}\n", ITEMS=[{"code": "\\section{Introduction}\nWhy this report matters.\n\\sectoin{Results}\nThe values agree.", "err": "! Undefined control sequence.\nl.3 \\sectoin", "q": "Which change fixes it while keeping the Results heading?", "opts": ["Add \\usepackage{sectoin} to the preamble", "Change \\sectoin to \\section on line 3", "Delete line 3", "Add a blank line before line 3"], "ok": 1, "why": "Undefined control sequence means LaTeX does not know the command on that line. \\sectoin is a misspelling of \\section, so correct the spelling. A package only helps when the command is real but not loaded."}, {"code": "We recorded the \\textbf{thickness in nanometres.\n\n\\section{Results}\nThe three wafers agree.", "err": "! File ended while scanning use of \\textbf.", "opts": ["Replace \\textbf with \\emph", "Delete the blank line after line 1", "Close the brace: \\textbf{thickness in nanometres}.", "Add \\end{document} after line 1"], "ok": 2, "why": "The argument of \\textbf was opened with { but never closed, so LaTeX read to the end of the file looking for the }. Add the closing brace where the bold text should end."}, {"code": "Smith & Jones (2024) measured the same wafers.", "err": "! Misplaced alignment tab character &.", "opts": ["Write Smith \\& Jones", "Put the sentence in a table", "Write Smith && Jones", "Load a package for the ampersand"], "ok": 0, "why": "An unescaped & marks alignment, in tables and in some math environments. In ordinary text it gives this error, so write \\& to print the character."}, {"code": "The sheet resistance R_s fell as the dose rose.", "err": "! Missing $ inserted.", "q": "Which change fixes it so that s shows as a mathematical subscript?", "opts": ["Add \\usepackage{amsmath}", "Delete the space before R_s", "Write R\\_s instead", "Write $R_s$, so the subscript is in math mode"], "ok": 3, "why": "_ makes a subscript, which only works in math mode. $R_s$ typesets R with a subscript s. R\\_s would compile, but it prints an underscore, not a subscript."}, {"code": "\\begin{document}\n\\usepackage{amsmath}\n\\maketitle", "err": "! LaTeX Error: Can be used only in preamble.", "opts": ["Move \\maketitle above \\begin{document}", "Move \\usepackage{amsmath} above \\begin{document}", "Delete \\begin{document}", "Move \\usepackage{amsmath} after \\end{document}"], "ok": 1, "why": "Packages are loaded in the preamble, before \\begin{document}. Move the line up and the error disappears."}];
 var ta=document.getElementById('src'), outl=document.getElementById('outline'), chk=document.getElementById('checks');
-var KNOWN=['documentclass','usepackage','title','author','date','maketitle','begin','end','section','subsection','subsubsection','item','textbf','textit','emph','today','label','ref','cite','caption','includegraphics','frac','sum','ln','pi','centering','LaTeX','paragraph','footnote','url','href','newpage','tableofcontents','bibliography','bibliographystyle','eqref','left','right','sqrt','alpha','beta','mu','times','cdot','hline','toprule','midrule','bottomrule','label','and','thanks','input','include','chapter','part','appendix','noindent','vspace','hspace','small','large','Large','textwidth','linewidth','quad','qquad','text','mathrm','si','SI','unit','qty','num','abstract'];
-var CORE=['documentclass','usepackage','title','author','date','maketitle','begin','end','section','subsection','subsubsection','item','textbf','textit','emph','today','label','ref','cite','caption','includegraphics','frac','chapter','footnote','centering','tableofcontents','bibliography','bibliographystyle'];
-var TABENV=/^(tabular\*?|tabularx|array|align\*?|alignat\*?|eqnarray\*?|matrix|pmatrix|bmatrix|vmatrix|cases|split|aligned)$/;
-var MATHENV=/^(equation\*?|align\*?|alignat\*?|gather\*?|multline\*?|eqnarray\*?|displaymath|math)$/;
+var KNOWN=('documentclass usepackage RequirePackage title author date maketitle thanks and begin end part chapter section subsection subsubsection paragraph subparagraph item '+
+ 'textbf textit texttt textsc textsf textrm textup textmd textsl emph underline mbox hbox fbox makebox raisebox footnote footnotesize scriptsize tiny small normalsize large Large LARGE huge Huge '+
+ 'bf it rm tt sf sc em sl centering raggedright raggedleft noindent indent par newline linebreak pagebreak newpage clearpage cleardoublepage vspace hspace vfill hfill smallskip medskip bigskip '+
+ 'today LaTeX TeX LaTeXe ldots dots cdots vdots ddots textbackslash textasciitilde textasciicircum textless textgreater textbar slash S P copyright '+
+ 'label ref eqref pageref autoref cref Cref nameref cite citep citet citeauthor citeyear citealp nocite bibliography bibliographystyle bibitem printbibliography addbibresource '+
+ 'url href hyperref hypersetup includegraphics graphicspath caption captionof subcaption input include includeonly tableofcontents listoffigures listoftables appendix '+
+ 'hline cline toprule midrule bottomrule cmidrule multicolumn multirow tabularnewline arraystretch textwidth linewidth columnwidth textheight paperwidth '+
+ 'newcommand renewcommand providecommand def let setlength addtolength setcounter addtocounter value the newenvironment renewenvironment DeclareMathOperator '+
+ 'frac dfrac tfrac sqrt sum prod int iint oint lim limsup liminf log ln exp sin cos tan sec csc cot arcsin arccos arctan sinh cosh tanh max min sup inf det deg dim gcd '+
+ 'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega '+
+ 'Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega '+
+ 'times cdot div pm mp leq geq le ge neq approx sim simeq equiv propto infty partial nabla to rightarrow leftarrow Rightarrow Leftarrow leftrightarrow mapsto in notin subset subseteq cup cap forall exists ell hbar circ degree prime '+
+ 'left right big Big bigg Bigg middle quad qquad text textnormal mathrm mathbf mathit mathsf mathtt mathcal mathbb mathfrak boldsymbol operatorname displaystyle textstyle hat bar vec dot ddot tilde widehat widetilde overline underbrace overbrace '+
+ 'si SI num qty unit ang SIrange ohm nano micro milli kilo mega metre meter second volt ampere watt kelvin celsius degreeCelsius per square cubic percent '+
+ 'verb item abstract maketitle').split(' ');
+var CORE=['documentclass','usepackage','title','author','date','maketitle','begin','end','section','subsection','subsubsection','item','textbf','textit','texttt','emph','today','label','ref','cite','caption','includegraphics','frac','chapter','footnote','centering','tableofcontents','bibliography','bibliographystyle'];
+var RAW=/^(url|href|label|ref|eqref|pageref|autoref|cref|Cref|nameref|cite|citep|citet|citeauthor|citeyear|citealp|nocite|includegraphics|input|include|includeonly|bibliography|bibliographystyle|addbibresource|usepackage|RequirePackage|documentclass|graphicspath)$/;
+var TABENV=/^(tabular\*?|tabularx|tabulary|longtable|array|align\*?|alignat\*?|flalign\*?|eqnarray\*?|matrix|pmatrix|bmatrix|Bmatrix|vmatrix|Vmatrix|smallmatrix|cases|split|aligned|alignedat|gathered)$/;
+var MATHENV=/^(equation\*?|align\*?|alignat\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?|displaymath|math)$/;
 function lev(a,b){var m=a.length,n=b.length,d=[],i,j;for(i=0;i<=m;i++){d[i]=[i]}for(j=1;j<=n;j++)d[0][j]=j;for(i=1;i<=m;i++)for(j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function stripComment(line){var i=0;while(i<line.length){if(line[i]==='\\'){i+=2;continue}if(line[i]==='%')return [line.slice(0,i),line.slice(i)];i++}return [line,'']}
+function stripComment(line){var i=0;while(i<line.length){if(line[i]==='\\'){var v=line.slice(i).match(/^\\verb\*?(.)/);if(v){var c=line.indexOf(v[1],i+v[0].length);i=c<0?line.length:c+1;continue}i+=2;continue}if(line[i]==='%')return [line.slice(0,i),line.slice(i)];i++}return [line,'']}
+function skipGroup(line,i){ // line[i]==='{' ; returns index after the matching } on this line, or -1
+ var d=0;for(var j=i;j<line.length;j++){var c=line[j];if(c==='\\'){j++;continue}if(c==='{')d++;else if(c==='}'){d--;if(d===0)return j+1}}return -1}
 function analyze(s){
  var lines=s.split('\n'),W=[],out={cls:null,title:null,author:null,maketitle:false,abstract:false,secs:[],lists:0,items:0,inl:0,disp:0};
- var begin=-1,end=-1,stack=[],inMath=false,dispMath=false,brace=[],firstCode=-1,counters=[0,0,0],seen={};
+ var begin=-1,end=-1,stack=[],inMath=false,dispMath=false,dollarDisp=false,brace=[],firstCode=-1,counters=[0,0,0],seen={},mathOpenLine=0;
+ function E(m){W.push({sev:'error',m:m})} function C(m){W.push({sev:'check',m:m})}
  lines.forEach(function(raw,ix){
   var n=ix+1,sc=stripComment(raw),line=sc[0];
-  if(sc[1]){var before=line;if(/[0-9]\s*$/.test(before))W.push('Line '+n+': the % after '+esc(before.trim().split(/\s+/).pop())+' starts a comment, so the rest of the line will not print. Write \\% to print a percent sign.');}
+  if(sc[1]&&/[0-9]\s*$/.test(line))C('Line '+n+': the % after '+esc(line.trim().split(/\s+/).pop())+' starts a comment, so the rest of the line will not print. If you meant a percent sign, write \\%.');
   if(firstCode<0&&line.trim())firstCode=ix;
-  if(end>=0&&ix>end&&line.trim())W.push('Line '+n+': text after \\end{document} is ignored.');
+  if(end>=0&&ix>end&&line.trim())C('Line '+n+': text after \\end{document} is ignored.');
   var m;
-  if((m=line.match(/\\documentclass(\[[^\]]*\])?\{([^}]*)\}/))){out.cls=m[2];if(ix!==firstCode)W.push('Line '+n+': \\documentclass should be the first line of code.');}
+  if((m=line.match(/\\documentclass(\[[^\]]*\])?\{([^}]*)\}/))){out.cls=m[2];if(ix!==firstCode)C('Line '+n+': \\documentclass is normally the first line of code.');}
   if(line.indexOf('\\begin{document}')>=0&&begin<0)begin=ix;
   if(line.indexOf('\\end{document}')>=0&&end<0)end=ix;
   if((m=line.match(/\\title\{([^}]*)\}/)))out.title=m[1];
   if((m=line.match(/\\author\{([^}]*)\}/)))out.author=m[1];
-  if(/\\usepackage/.test(line)&&begin>=0&&ix>begin)W.push('Line '+n+': \\usepackage after \\begin{document} stops the compile (Can be used only in preamble). Move it into the preamble.');
-  if(/\\maketitle/.test(line)){if(begin<0||ix<begin)W.push('Line '+n+': \\maketitle belongs in the body, after \\begin{document}.');else out.maketitle=true;}
+  if(/\\usepackage/.test(line)&&begin>=0&&ix>begin)E('Line '+n+': \\usepackage after \\begin{document} gives the error Can be used only in preamble. Move it into the preamble.');
+  if(/\\maketitle/.test(line)){if(begin<0||ix<begin)E('Line '+n+': \\maketitle belongs in the body, after \\begin{document}.');else out.maketitle=true;}
   if(/\\begin\{abstract\}/.test(line))out.abstract=true;
   var re=/\\(section|subsection|subsubsection)(\*?)\{([^}]*)\}/g;
   while((m=re.exec(line))){var lvl={section:0,subsection:1,subsubsection:2}[m[1]];var num='';if(!m[2]){counters[lvl]++;for(var k=lvl+1;k<3;k++)counters[k]=0;num=counters.slice(0,lvl+1).join('.')}out.secs.push({lvl:lvl,num:num,t:m[3]})}
-  var cr=/\\([A-Za-z]+)/g;while((m=cr.exec(line))){var c=m[1];if(KNOWN.indexOf(c)<0&&!seen[c]){var best=null,bd=9;CORE.forEach(function(k){var d=lev(c,k);if(d<bd){bd=d;best=k}});if(bd<=2&&c.length>=4){seen[c]=1;W.push('Line '+n+': \\'+esc(c)+' is not a command LaTeX knows (Undefined control sequence). Did you mean \\'+best+'?')}}}
-  // environments, math, braces, special characters
+  var defLine=/\\(newcommand|renewcommand|providecommand|def|newenvironment|renewenvironment)/.test(line);
   var i=0;
   while(i<line.length){
    var ch=line[i];
    if(ch==='\\'){
-    var rest=line.slice(i);
+    var rest=line.slice(i),v;
+    if((v=rest.match(/^\\verb\*?(.)/))){var c2=line.indexOf(v[1],i+v[0].length);i=c2<0?line.length:c2+1;continue}
     var bm=rest.match(/^\\begin\{([^}]*)\}/),em=rest.match(/^\\end\{([^}]*)\}/);
-    if(bm){stack.push({e:bm[1],n:n});if(bm[1]==='itemize'||bm[1]==='enumerate')out.lists++;if(MATHENV.test(bm[1])){dispMath=true;out.disp++}i+=bm[0].length;continue}
-    if(em){var top=stack.pop();if(!top)W.push('Line '+n+': \\end{'+esc(em[1])+'} has no matching \\begin.');else if(top.e!==em[1])W.push('Line '+n+': \\end{'+esc(em[1])+'} does not match \\begin{'+esc(top.e)+'} on line '+top.n+'.');if(MATHENV.test(em[1]))dispMath=false;i+=em[0].length;continue}
+    if(bm){stack.push({e:bm[1],n:n});if(bm[1]==='itemize'||bm[1]==='enumerate')out.lists++;if(MATHENV.test(bm[1])){if(bm[1]==='math'){inMath=true;out.inl++}else{dispMath=true;out.disp++}}i+=bm[0].length;continue}
+    if(em){var top=stack.pop();if(!top)E('Line '+n+': \\end{'+esc(em[1])+'} has no matching \\begin.');else if(top.e!==em[1])E('Line '+n+': \\end{'+esc(em[1])+'} does not match \\begin{'+esc(top.e)+'} on line '+top.n+'.');if(MATHENV.test(em[1])){if(em[1]==='math')inMath=false;else dispMath=false}i+=em[0].length;continue}
+    if(rest[1]==='('){inMath=true;mathOpenLine=n;out.inl++;i+=2;continue}
+    if(rest[1]===')'){inMath=false;i+=2;continue}
     if(rest[1]==='['){dispMath=true;out.disp++;i+=2;continue}
     if(rest[1]===']'){dispMath=false;i+=2;continue}
-    if(/^\\item\b/.test(rest))out.items++;
+    var cm=rest.match(/^\\([A-Za-z]+)\*?/);
+    if(cm){var c=cm[1];i+=cm[0].length;
+     if(c==='item')out.items++;
+     if(KNOWN.indexOf(c)<0&&!seen[c]){var best=null,bd=9;CORE.forEach(function(k){var d=lev(c,k);if(d<bd){bd=d;best=k}});if(bd>0&&bd<=2&&c.length>=4){seen[c]=1;C('Line '+n+': \\'+esc(c)+' is not a standard LaTeX command. If you meant \\'+best+', fix the spelling: a misspelled command gives Undefined control sequence. If it comes from a package, check that the package is loaded, then compile in Overleaf.')}}
+     if(RAW.test(c)){ // skip optional [..] and the {..} argument(s) whose text is not prose
+      var reps=(c==='href')?1:1;
+      while(line[i]===' ')i++;
+      while(line[i]==='['){var cb=line.indexOf(']',i);if(cb<0)break;i=cb+1}
+      for(var r=0;r<reps;r++){if(line[i]==='{'){var j=skipGroup(line,i);if(j<0)break;i=j}}
+     }
+     continue}
     i+=2;continue}
    if(ch==='{'){brace.push(n)}
-   else if(ch==='}'){if(!brace.length)W.push('Line '+n+': a closing brace } has no opening brace.');else brace.pop()}
-   else if(ch==='$'){inMath=!inMath;if(inMath)out.inl++}
-   else if(ch==='&'){var inTab=stack.some(function(x){return TABENV.test(x.e)});if(!inTab)W.push('Line '+n+': & outside a table gives Misplaced alignment tab character. Write \\& to print it.')}
-   else if((ch==='_'||ch==='^')&&!inMath&&!dispMath){W.push('Line '+n+': '+ch+' outside math gives Missing $ inserted. Put the math between dollar signs, for example $R_s$.')}
-   else if(ch==='#'){W.push('Line '+n+': # is a special character. Write \\# to print it.')}
+   else if(ch==='}'){if(!brace.length)E('Line '+n+': a closing brace } has no opening brace (Too many }\'s).');else brace.pop()}
+   else if(ch==='$'){
+    if(line[i+1]==='$'&&!inMath){dispMath=!dispMath;dollarDisp=dispMath;if(dispMath)out.disp++;i+=2;continue}
+    inMath=!inMath;if(inMath){out.inl++;mathOpenLine=n}}
+   else if(ch==='&'){var inTab=stack.some(function(x){return TABENV.test(x.e)});if(!inTab)E('Line '+n+': an unescaped & marks alignment, in tables and some math environments. In ordinary text it gives Misplaced alignment tab character; write \\& to print it.')}
+   else if((ch==='_'||ch==='^')&&!inMath&&!dispMath){E('Line '+n+': '+ch+' outside math gives Missing $ inserted. Put the math between $...$ or \\(...\\), for example $R_s$. To print the character in text, write \\'+ch+(ch==='^'?'{}':'')+'.')}
+   else if(ch==='#'&&!defLine){E('Line '+n+': # is a special character. Write \\# to print it.')}
    i++}
-  if(inMath){W.push('Line '+n+': a $ opens math that is not closed on the same line.');inMath=false}
+  if(inMath&&mathOpenLine===n&&!line.trim().endsWith('$')){C('Line '+n+': math opened on this line is not closed on it. Check that every $ or \\( has its partner.')}
  });
- if(!out.cls)W.push('No \\documentclass line: every document starts with one, for example \\documentclass{article}.');
- if(begin<0)W.push('No \\begin{document}: the body has nowhere to start.');
- if(end<0)W.push('No \\end{document}: add it as the last line.');
- if(out.title!==null&&!out.maketitle&&begin>=0)W.push('There is a \\title but no \\maketitle in the body, so the title will not print.');
- brace.forEach(function(ln){W.push('Line '+ln+': an opening brace { is never closed (Runaway argument or File ended while scanning).')});
- stack.forEach(function(x){if(x.e!=='document')W.push('Line '+x.n+': \\begin{'+esc(x.e)+'} is never closed with \\end{'+esc(x.e)+'}.')});
- out.items=out.items;out.W=W;return out}
+ if(!out.cls)E('No \\documentclass line: every document starts with one, for example \\documentclass{article}.');
+ if(begin<0)E('No \\begin{document}: the body has nowhere to start.');
+ if(end<0)E('No \\end{document}: add it as the last line.');
+ if(out.title!==null&&!out.maketitle&&begin>=0)C('There is a \\title but no \\maketitle in the body, so the title will not print.');
+ brace.forEach(function(ln){E('Line '+ln+': an opening brace { is never closed (Runaway argument or File ended while scanning).')});
+ stack.forEach(function(x){if(x.e!=='document')E('Line '+x.n+': \\begin{'+esc(x.e)+'} is never closed with \\end{'+esc(x.e)+'}.')});
+ if(inMath||dispMath)E('Math that was opened is never closed.');
+ W.sort(function(a,b){return (a.sev===b.sev)?0:(a.sev==='error'?-1:1)});
+ out.W=W;return out}
+window.T1={analyze:analyze};
 function render(){
  var r=analyze(ta.value),h='';
  h+='<li>Class: '+(r.cls?'<span class="mono">'+esc(r.cls)+'</span>':'<span class="warn">none</span>')+'</li>';
@@ -143,7 +182,7 @@ function render(){
  h+='<li>Lists: '+r.lists+(r.lists?' ('+r.items+' items)':'')+'</li>';
  h+='<li>Equations: '+r.inl+' inline, '+r.disp+' displayed</li>';
  outl.innerHTML=h;
- chk.innerHTML=r.W.length?r.W.slice(0,8).map(function(w){return '<li class="warn">'+w+'</li>'}).join('')+(r.W.length>8?'<li>and '+(r.W.length-8)+' more</li>':''):'<li class="good">No problems found by these checks. Now compile in Overleaf to be sure.</li>';
+ chk.innerHTML=r.W.length?r.W.slice(0,8).map(function(w){return '<li class="'+(w.sev==='error'?'warn':'chk')+'"><span class="sev '+w.sev+'">'+(w.sev==='error'?'LaTeX error':'Check')+'</span> '+w.m+'</li>'}).join('')+(r.W.length>8?'<li>and '+(r.W.length-8)+' more</li>':''):'<li class="good">No problems found by these checks. This tool is not a compiler, so compile in Overleaf to be sure.</li>';
 }
 var t;ta.addEventListener('input',function(){clearTimeout(t);t=setTimeout(render,150)});
 document.getElementById('reset').onclick=function(){ta.value=GOOD;render()};
@@ -155,7 +194,7 @@ ITEMS.forEach(function(it,k){
  var d=document.createElement('div');d.className='item';
  var code=it.code.split('\n').map(function(l,i){return '<span class="ln">'+(i+1)+'  </span>'+esc(l)}).join('\n');
  var opts=it.opts.map(function(o,j){return '<label class="opt"><input type="radio" name="q'+k+'" value="'+j+'"><span class="mono">'+esc(o)+'</span></label>'}).join('');
- d.innerHTML='<h3>Snippet '+(k+1)+' of 5</h3><pre aria-label="Code">'+code+'</pre><pre class="err" aria-label="What Overleaf reports">'+esc(it.err)+'</pre><fieldset><legend>Which change fixes it?</legend>'+opts+'</fieldset><button type="button">Check</button><div class="fb" role="status" aria-live="polite"></div>';
+ d.innerHTML='<h3>Snippet '+(k+1)+' of 5</h3><pre aria-label="Code">'+code+'</pre><pre class="err" aria-label="What Overleaf reports">'+esc(it.err)+'</pre><fieldset><legend>'+esc(it.q||'Which change fixes it?')+'</legend>'+opts+'</fieldset><button type="button">Check</button><div class="fb" role="status" aria-live="polite"></div>';
  host.appendChild(d);
  d.querySelector('button').onclick=function(){
   var sel=d.querySelector('input:checked'),fb=d.querySelector('.fb');

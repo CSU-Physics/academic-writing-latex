@@ -1,0 +1,54 @@
+% Module 1 starter: Find and fix
+% Academic Writing Using LaTeX, Central State University SemiAcademy
+% Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+%
+% This short report has three planted problems:
+%   1. one stops the compile,
+%   2. one makes text vanish from the PDF without any error,
+%   3. one is a package loaded in the wrong place.
+% Find all three, fix them, and recompile until every sentence shows.
+% Lines that start with % (like these) are comments. They never print.
+
+\documentclass{article}
+
+\title{Oxide Thickness After Dry Oxidation}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\usepackage{amsmath}
+
+\begin{abstract}
+Silicon dioxide grown by dry oxidation is used as an insulating layer,
+so its thickness must be controlled. We measured the oxide on three
+wafers after one hour at 1000 degrees Celsius. The mean thickness was
+50 nm, and the spread across each wafer was 3% of the mean, inside the 5% limit we set.
+The process is ready for the next test, at a longer oxidation time.
+\end{abstract}
+
+\section{Introduction}
+An oxide layer that is too thin can leak current, and one that is too
+thick wastes furnace time. This report checks one furnace setting.
+
+\section{Methods}
+We oxidized three wafers together and measured each one at five points
+with an ellipsometer, recording the \textbf{thickness in nanometres.
+The mean thickness of a wafer is the average of its five readings:
+\[
+\bar{t} = \frac{1}{5} \sum_{i=1}^{5} t_i
+\]
+
+\section{Results}
+The three wafers gave mean thicknesses of 49, 50 and 51 nm.
+\begin{itemize}
+  \item No reading was outside the limit.
+  \item The center of each wafer was slightly thicker than the edge.
+\end{itemize}
+
+\section{Conclusion}
+One hour at 1000 degrees Celsius gives a uniform oxide of about 50 nm.
+
+\end{document}

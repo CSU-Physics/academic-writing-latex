@@ -3,10 +3,13 @@
 % Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 %
 % This short report has three planted problems:
-%   1. one stops the compile,
+%   1. one is an error that stops the compile,
 %   2. one makes text vanish from the PDF without any error,
-%   3. one is a package loaded in the wrong place.
-% Find all three, fix them, and recompile until every sentence shows.
+%   3. one is a package loaded in the wrong place (Overleaf reports an
+%      error, but may still show a PDF).
+% Find all three, fix them, and recompile until the log shows no errors
+% and every sentence appears in the PDF.
+% The measurements are invented for practice.
 % Lines that start with % (like these) are comments. They never print.
 
 \documentclass{article}
@@ -22,11 +25,12 @@
 \usepackage{amsmath}
 
 \begin{abstract}
-Silicon dioxide grown by dry oxidation is used as an insulating layer,
-so its thickness must be controlled. We measured the oxide on three
-wafers after one hour at 1000 degrees Celsius. The mean thickness was
-50 nm, and the spread across each wafer was 3% of the mean, inside the 5% limit we set.
-The process is ready for the next test, at a longer oxidation time.
+Silicon dioxide grown by dry oxidation is often used as an insulating
+layer, so its thickness is checked after growth. We measured the oxide
+on three wafers after one hour at 1000 degrees Celsius, at five points
+on each wafer. The mean thickness was 50 nm, and on each wafer the
+readings stayed within 3% of that wafer's mean, inside the 5% limit we set.
+The next test uses a longer oxidation time.
 \end{abstract}
 
 \section{Introduction}
@@ -45,10 +49,13 @@ The mean thickness of a wafer is the average of its five readings:
 The three wafers gave mean thicknesses of 49, 50 and 51 nm.
 \begin{itemize}
   \item No reading was outside the limit.
-  \item The center of each wafer was slightly thicker than the edge.
+  \item On each wafer, the center reading was slightly thicker than the
+        edge readings.
 \end{itemize}
 
 \section{Conclusion}
-One hour at 1000 degrees Celsius gives a uniform oxide of about 50 nm.
+On the three sampled wafers, one hour at 1000 degrees Celsius gave about
+50 nm of oxide, with limited variation across the measured points. More
+wafers and runs are needed before drawing a conclusion about the process.
 
 \end{document}

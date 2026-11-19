@@ -8,7 +8,9 @@ Slide decks, Try it tools and Overleaf starter files for the SemiAcademy micro-c
 - `tryit/t1-structure-errors.html`: Module 1 Try it tool, Source and structure, then Find the error.
 - `starters/m1-find-and-fix.tex`: Module 1 Overleaf starter, a short report with three planted problems.
 - `starters/m1-find-and-fix.zip`: the same starter as `main.tex` in a .zip, for Overleaf's upload of a zipped project.
-- `tests/t1_regression.js`: regression tests for the Module 1 Try it checker (valid LaTeX that must pass, broken LaTeX that must be flagged). Run with Node and Playwright: `node tests/t1_regression.js`.
+- `tests/cases.js`: test cases for the Module 1 Try it checker: valid LaTeX, broken LaTeX, and text after `\end{document}`.
+- `tests/t1_regression.js`: checker tests (valid cases report nothing, broken cases report the expected message, text after `\end{document}` gives one notice and stays out of the outline). Run with Node and Playwright: `node tests/t1_regression.js`.
+- `tests/compile_valid.js`: compiler tests, kept separate (every valid case must compile with pdflatex with no errors; uses the image in `tests/fixtures`). Run: `node tests/compile_valid.js`.
 
 Later modules add their own files in the same folders.
 

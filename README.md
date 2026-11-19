@@ -7,6 +7,8 @@ Slide decks, Try it tools and Overleaf starter files for the SemiAcademy micro-c
 - `slides/m1.html`: Module 1 slides, Your first paper (11 slides).
 - `tryit/t1-structure-errors.html`: Module 1 Try it tool, Source and structure, then Find the error.
 - `starters/m1-find-and-fix.tex`: Module 1 Overleaf starter, a short report with three planted problems.
+- `starters/m1-find-and-fix.zip`: the same starter as `main.tex` in a .zip, for Overleaf's upload of a zipped project.
+- `tests/t1_regression.js`: regression tests for the Module 1 Try it checker (valid LaTeX that must pass, broken LaTeX that must be flagged). Run with Node and Playwright: `node tests/t1_regression.js`.
 
 Later modules add their own files in the same folders.
 
@@ -14,7 +16,7 @@ Later modules add their own files in the same folders.
 
 Every HTML file is self-contained: inline CSS and JavaScript, the Lato font embedded, no outside requests, no cookies or browser storage, and nothing typed is saved or sent anywhere. Decks move with the arrow keys, Page Up and Page Down, Home and End, or the buttons, and print one slide per page.
 
-Starter files open in Overleaf through its Open in Overleaf link, `https://www.overleaf.com/docs?snip_uri=<address of the .tex file>`, which copies the file into the learner's own Overleaf account. Overleaf is a separate service; this project is not affiliated with it. Each starter is kept small so it compiles well inside the free plan's time limit.
+Starter files open in Overleaf through its Open in Overleaf link, `https://www.overleaf.com/docs?snip_uri=<address of the .tex file>`, which copies the file into the learner's own Overleaf account. If that link does not work, the learner downloads the .zip and uploads it as a new project, or adds the .tex file to a blank project and sets it as the main document. Overleaf is a separate service; this project is not affiliated with it. Each starter is kept small so it compiles well inside the free plan's time limit.
 
 ## License
 

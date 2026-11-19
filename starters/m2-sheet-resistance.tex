@@ -1,0 +1,45 @@
+% Module 2 starter: Sheet resistance derivation
+% Academic Writing Using LaTeX, Central State University SemiAcademy
+% Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+%
+% The numbers are invented for practice. This file compiles, but the
+% mathematics is typed as plain text. Rewrite it:
+%   TASK 1. Typeset the three relations for R as one align environment,
+%           with the = signs lined up and one step per line.
+%   TASK 2. Number only the last line, give it \label{eq:line}, and refer
+%           to it in the Example section with Eq.~\eqref{eq:line}.
+%   TASK 3. Put every symbol in math mode, and define each symbol the
+%           first time it appears.
+%   TASK 4. Write every quantity with its unit using \qty from siunitx.
+%   TASK 5. Punctuate the equations as part of the sentences.
+% Recompile after each task. The module page has a model solution.
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{siunitx}
+
+\title{Resistance of a Doped Test Line}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Derivation}
+A doped line of length L, width W and thickness t, made from a layer of
+uniform resistivity rho, has resistance
+
+R = rho L / (W t)
+
+The sheet resistance of the layer is Rs = rho / t, so
+
+R = (rho / t) (L / W)
+
+R = Rs L / W
+
+\section{Example}
+For Rs = 50 ohm per square, L = 200 um and W = 10 um, the line is
+L/W = 20 squares long, so the equation above gives R = 1000 ohm.
+
+\end{document}

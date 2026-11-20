@@ -57,6 +57,7 @@ legend{font-weight:700;margin-bottom:4px;font-size:15px}
 .fb.ok{background:var(--okbg);color:var(--ok)}
 .fb.no{background:var(--badbg);color:var(--bad)}
 .fb:empty{display:none}
+.fb.chg{background:#FFF4CC;color:#5A4A00}
 .score{font-weight:700;color:var(--navy);margin-top:8px}
 footer{margin:14px 12px 0;font-size:12.5px;color:var(--mut)}
 @media (max-width:640px){.grid{grid-template-columns:1fr}textarea{height:260px}header h1{font-size:20px}}
@@ -86,7 +87,7 @@ textarea.small{height:150px}
 </head>
 <body>
 <div class="wrap">
-<header><p class="kick">Try it · about 12 minutes · Module 3</p><h1>Table builder, Fix this table, Caption check</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 19 Nov 2026.</p></header>
+<header><p class="kick">Try it · about 12 minutes · Module 3</p><h1>Table builder, Fix this table, Caption check</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 20 Nov 2026.</p></header>
 
 <section aria-labelledby="h-a"><h2 id="h-a">1. Table builder</h2>
 <p>Paste rows copied from a spreadsheet (tab or comma separated, header first), or edit the sample. The tool writes a booktabs table with numbers right-aligned and special characters escaped, and shows roughly how it will look. The compile in Overleaf is the final check. Your table needs <span class="mono">\usepackage{booktabs}</span> in the preamble.</p>
@@ -105,7 +106,7 @@ textarea.small{height:150px}
 <div id="caps"></div><p class="score" id="capscore" role="status" aria-live="polite">You have 0 of 3 right.</p>
 </section>
 
-<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 19 Nov 2026. Licensed CC BY 4.0.</footer>
+<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 20 Nov 2026. Licensed CC BY 4.0.</footer>
 </div>
 <script>
 (function(){
@@ -127,6 +128,7 @@ function choiceItems(hostId,scoreId,ITEMS,label){
   var opts=it.opts.map(function(o,j){return '<label class="opt"><input type="radio" name="'+hostId+k+'" value="'+j+'"><span'+(it.mono===false?'':' class="mono"')+'>'+esc(o)+'</span></label>'}).join('');
   d.innerHTML='<h3>'+esc(label)+' '+(k+1)+' of '+ITEMS.length+(it.title?': '+esc(it.title):'')+'</h3>'+(it.intro?'<p>'+esc(it.intro)+'</p>':'')+code+show+err+'<fieldset><legend>'+esc(it.q)+'</legend>'+opts+'</fieldset><button type="button">Check</button><div class="fb" role="status" aria-live="polite"></div>';
   host.appendChild(d);
+  d.querySelectorAll('input').forEach(function(r){r.addEventListener('change',function(){var fb=d.querySelector('.fb');if(!fb.textContent)return;d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});fb.className='fb chg';fb.textContent='Changed: press Check again.';if(right[k]){delete right[k];document.getElementById(scoreId).textContent='You have '+Object.keys(right).length+' of '+ITEMS.length+' right.'}})});
   d.querySelector('button').onclick=function(){
    var sel=d.querySelector('input:checked'),fb=d.querySelector('.fb');
    d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});

@@ -57,6 +57,7 @@ legend{font-weight:700;margin-bottom:4px;font-size:15px}
 .fb.ok{background:var(--okbg);color:var(--ok)}
 .fb.no{background:var(--badbg);color:var(--bad)}
 .fb:empty{display:none}
+.fb.chg{background:#FFF4CC;color:#5A4A00}
 .score{font-weight:700;color:var(--navy);margin-top:8px}
 footer{margin:14px 12px 0;font-size:12.5px;color:var(--mut)}
 @media (max-width:640px){.grid{grid-template-columns:1fr}textarea{height:260px}header h1{font-size:20px}}
@@ -86,7 +87,7 @@ textarea.small{height:150px}
 </head>
 <body>
 <div class="wrap">
-<header><p class="kick">Try it · about 8 minutes · Module 5</p><h1>Template matcher, then Edit the template</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 19 Nov 2026.</p></header>
+<header><p class="kick">Try it · about 8 minutes · Module 5</p><h1>Template matcher, then Edit the template</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 20 Nov 2026.</p></header>
 
 <section aria-labelledby="h-a"><h2 id="h-a">1. Template matcher</h2>
 <p>For each brief, choose where you would start in the Overleaf gallery, the layout the document needs, and how it cites sources. Then check your choices.</p>
@@ -97,7 +98,7 @@ textarea.small{height:150px}
 <div id="edit"></div><p class="score" id="escore" role="status" aria-live="polite">You have 0 of 4 right.</p>
 </section>
 
-<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 19 Nov 2026. Licensed CC BY 4.0.</footer>
+<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 20 Nov 2026. Licensed CC BY 4.0.</footer>
 </div>
 <script>
 (function(){
@@ -119,6 +120,7 @@ function choiceItems(hostId,scoreId,ITEMS,label){
   var opts=it.opts.map(function(o,j){return '<label class="opt"><input type="radio" name="'+hostId+k+'" value="'+j+'"><span'+(it.mono===false?'':' class="mono"')+'>'+esc(o)+'</span></label>'}).join('');
   d.innerHTML='<h3>'+esc(label)+' '+(k+1)+' of '+ITEMS.length+(it.title?': '+esc(it.title):'')+'</h3>'+(it.intro?'<p>'+esc(it.intro)+'</p>':'')+code+show+err+'<fieldset><legend>'+esc(it.q)+'</legend>'+opts+'</fieldset><button type="button">Check</button><div class="fb" role="status" aria-live="polite"></div>';
   host.appendChild(d);
+  d.querySelectorAll('input').forEach(function(r){r.addEventListener('change',function(){var fb=d.querySelector('.fb');if(!fb.textContent)return;d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});fb.className='fb chg';fb.textContent='Changed: press Check again.';if(right[k]){delete right[k];document.getElementById(scoreId).textContent='You have '+Object.keys(right).length+' of '+ITEMS.length+' right.'}})});
   d.querySelector('button').onclick=function(){
    var sel=d.querySelector('input:checked'),fb=d.querySelector('.fb');
    d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});
@@ -138,6 +140,7 @@ BRIEFS.forEach(function(b,k){
  var d=document.createElement('div');d.className='brief';
  d.innerHTML='<h3>Brief '+(k+1)+': '+esc(b.t)+'</h3><p class="d">'+esc(b.d)+'</p><div class="pick"><label for="w'+k+'">Start in the gallery</label>'+sel('w'+k,WHERE)+'<label for="l'+k+'">Layout</label>'+sel('l'+k,LAYOUT)+'<label for="c'+k+'">Citations</label>'+sel('c'+k,CITE)+'</div><div class="row"><button type="button">Check</button></div><div class="fb" role="status" aria-live="polite"></div>';
  host.appendChild(d);
+ d.querySelectorAll('select').forEach(function(sl){sl.addEventListener('change',function(){var fb=d.querySelector('.fb');if(!fb.textContent)return;fb.className='fb chg';fb.textContent='Changed: press Check again.';if(done[k]){delete done[k];document.getElementById('bscore').textContent='Briefs matched: '+Object.keys(done).length+' of 6.'}})});
  d.querySelector('button').onclick=function(){
   var v=function(p){var x=d.querySelector('#'+p+k).value;return x===''?-1:+x};var fb=d.querySelector('.fb');
   if(v('w')<0||v('l')<0||v('c')<0){fb.className='fb no';fb.textContent='Make all three choices first.';return}

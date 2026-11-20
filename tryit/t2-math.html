@@ -59,6 +59,7 @@ legend{font-weight:700;margin-bottom:4px;font-size:15px}
 .fb.ok{background:var(--okbg);color:var(--ok)}
 .fb.no{background:var(--badbg);color:var(--bad)}
 .fb:empty{display:none}
+.fb.chg{background:#FFF4CC;color:#5A4A00}
 .score{font-weight:700;color:var(--navy);margin-top:8px}
 footer{margin:14px 12px 0;font-size:12.5px;color:var(--mut)}
 @media (max-width:640px){.grid{grid-template-columns:1fr}textarea{height:260px}header h1{font-size:20px}}
@@ -77,30 +78,52 @@ input.tex{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Lib
 </head>
 <body>
 <div class="wrap">
-<header><p class="kick">Try it · about 12 minutes · Module 2</p><h1>Equation builder, then Fix the math</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 19 Nov 2026.</p></header>
+<header><p class="kick">Try it · about 12 minutes · Module 2</p><h1>Equation builder, then Fix the math</h1><p>Practice only. Nothing you type is saved or sent anywhere, and it is not graded. Revised 20 Nov 2026.</p></header>
 <p class="nokatex" id="nokatex">The math preview did not load. Open this tool in a new tab, or reload the page.</p>
 <section aria-labelledby="h-a"><h2 id="h-a">1. Equation builder</h2>
 <p>Write the LaTeX that produces each target, without dollar signs. Your preview updates as you type, and Check compares what your LaTeX prints with the target, so spacing in your source does not matter. The preview uses KaTeX, which shows math the way LaTeX does but is not LaTeX: the compile in Overleaf is the final check.</p>
-<div id="targets"></div><p class="score" id="tscore" role="status" aria-live="polite">Equations built: 0 of 6.</p>
+<div id="targets"></div><p class="score" id="tscore" role="status" aria-live="polite">Equations checked right: 0 of 6.</p>
 </section>
 <section aria-labelledby="h-b"><h2 id="h-b">2. Fix the math</h2>
 <p>Each snippet prints the wrong thing or makes Overleaf report an error. Read the goal, pick the change that meets it, then check your answer.</p>
 <div id="fixes"></div><p class="score" id="fscore" role="status" aria-live="polite">You have 0 of 6 right.</p>
 </section>
-<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 19 Nov 2026. Licensed CC BY 4.0. Math rendering: KaTeX (MIT licence).</footer>
+<footer>Academic Writing Using LaTeX · Central State University · SemiAcademy. Revised 20 Nov 2026. Licensed CC BY 4.0. Math rendering: KaTeX (MIT licence).</footer>
 </div>
 <script src="../vendor/katex-0.16.47/katex.min.js"></script>
 <script>
 (function(){
-var TARGETS=[{"t": "Ohm's law", "d": "Voltage equals current times resistance.", "src": "V = IR", "alts": [], "hint": "Three letters and an equals sign. Math mode puts the letters in italics for you."}, {"t": "Resistance of a doped line", "d": "Sheet resistance times length over width.", "src": "R = R_s \\frac{L}{W}", "alts": [], "hint": "Use R_s for the subscript and \\frac{L}{W} for the fraction."}, {"t": "Mass-action law", "d": "Electron and hole concentrations against the intrinsic concentration.", "src": "n p = n_i^2", "alts": ["np = n_i^{2}", "n p = n_{i}^{2}"], "hint": "n_i^2 puts i below and 2 above the same n."}, {"t": "Conductivity", "d": "Electron and hole terms, each with its mobility.", "src": "\\sigma = q (n \\mu_n + p \\mu_p)", "alts": ["\\sigma = q\\left(n\\mu_n + p\\mu_p\\right)"], "hint": "Greek letters are commands: \\sigma and \\mu."}, {"t": "Fermi-Dirac distribution", "d": "The probability that a state at energy E is occupied.", "src": "f(E) = \\frac{1}{1 + e^{(E - E_{\\mathrm{F}})/k_B T}}", "alts": ["f(E) = \\frac{1}{1 + e^{(E - E_F)/k_B T}}", "f(E)=\\frac{1}{1+e^{(E-E_{\\mathrm{F}})/(k_B T)}}", "f(E) = \\frac{1}{1 + e^{(E - E_{\\mathrm{F}})/k_{\\mathrm{B}} T}}"], "hint": "The whole (E - E_F)/k_B T goes in braces after ^, and the F label is upright: E_{\\mathrm{F}}."}, {"t": "Oxide growth (Deal-Grove)", "d": "Oxide thickness against time.", "src": "x_{\\mathrm{ox}}^2 + A x_{\\mathrm{ox}} = B (t + \\tau)", "alts": [], "hint": "A two-letter subscript needs braces, and a word label is upright: x_{\\mathrm{ox}}. \\tau is the Greek letter tau."}], FIXES=[{"goal": "Which change prints the unit upright, with the right space?", "code": "The oxide is $t = 50 nm$ thick.", "show": "t = 50 nm", "err": "", "opts": ["Write $t = 50 \\textit{nm}$", "Write $t = \\qty{50}{\\nano\\metre}$ (siunitx)", "Write $t = 50nm$", "Write $t = 50^{nm}$"], "ok": 1, "why": "In math mode, n and m are read as two variables and set in italics. \\qty from siunitx prints the number and an upright unit with the right space between them."}, {"goal": "Which change makes the whole word Fermi the subscript, upright?", "code": "The Fermi level $E_Fermi$ lies near midgap.", "show": "E_Fermi", "err": "", "opts": ["Write $E\\_Fermi$", "Write $E^{Fermi}$", "Write $E_{\\mathrm{Fermi}}$", "Write $E_{F}ermi$"], "ok": 2, "why": "A subscript takes one character unless you use braces. \\mathrm makes a word label upright."}, {"goal": "Which change puts the whole -E/kT in the exponent?", "code": "The ratio falls as $e^-E/kT$.", "show": "e^-E/kT", "err": "", "opts": ["Write $e^{-E/kT}$", "Write $e^(-E/kT)$", "Write $e^-{E/kT}$", "Write $e\\^{-E/kT}$"], "ok": 0, "why": "^ raises only the next character. Braces raise the whole group."}, {"goal": "Which change makes the reference print the equation number?", "code": "\\begin{equation}\n  R_s = \\rho / t\n  \\label{eq:sheet}\n\\end{equation}\nAs Eq.~\\eqref{eq:sheets} shows,", "show": "", "err": "The PDF shows: As Eq. (??) shows,", "opts": ["Replace \\eqref with \\cite", "Change \\eqref{eq:sheets} to \\eqref{eq:sheet}", "Move \\label above \\begin{equation}", "Add \\usepackage{hyperref}"], "ok": 1, "why": "?? means LaTeX found no label with that name. The names in \\label and \\eqref must match exactly."}, {"goal": "Which change fixes it while keeping both lines in one align?", "code": "\\begin{align}\n  R &= \\rho L / (W t) \\\\\n\n  R_s &= \\rho / t\n\\end{align}", "show": "", "err": "! Paragraph ended before \\align was complete.", "opts": ["Delete the blank line inside align", "Add a second blank line", "Replace \\\\ with a blank line", "Put each line in its own $...$"], "ok": 0, "why": "A blank line starts a new paragraph, which is not allowed inside align or equation."}, {"goal": "Which change lines up the three lines at their = signs?", "code": "\\begin{align*}\n  R = \\rho L / (W t) \\\\\n  = (\\rho / t)(L / W) \\\\\n  = R_s L / W\n\\end{align*}", "show": "\\begin{align*} R = \\rho L / (W t) \\\\ = (\\rho / t)(L / W) \\\\ = R_s L / W \\end{align*}", "err": "", "opts": ["Put & after each \\\\", "Add \\centering before the first line", "Put & just before each = sign", "Write each line inside \\[ ... \\]"], "ok": 2, "why": "In align, & marks the point to line up. Put it just before each = sign."}];
+var TARGETS=[{"t": "Ohm's law", "d": "Voltage equals current times resistance.", "src": "V = IR", "alts": [], "hint": "Three letters and an equals sign. Math mode puts the letters in italics for you."}, {"t": "Resistance of a doped line", "d": "Sheet resistance times length over width.", "src": "R = R_s \\frac{L}{W}", "alts": [], "hint": "Use R_s for the subscript and \\frac{L}{W} for the fraction."}, {"t": "Mass-action law", "d": "Electron and hole concentrations against the intrinsic concentration.", "src": "n p = n_i^2", "alts": ["np = n_i^{2}", "n p = n_{i}^{2}"], "hint": "n_i^2 puts i below and 2 above the same n."}, {"t": "Conductivity", "d": "Electron and hole terms, each with its mobility.", "src": "\\sigma = q (n \\mu_n + p \\mu_p)", "alts": ["\\sigma = q\\left(n\\mu_n + p\\mu_p\\right)"], "hint": "Greek letters are commands: \\sigma and \\mu."}, {"t": "Fermi-Dirac distribution", "d": "The probability that a state at energy E is occupied. The whole product k_B T is in the denominator of the exponent.", "src": "f(E) = \\frac{1}{1 + e^{(E - E_{\\mathrm{F}})/(k_B T)}}", "alts": ["f(E) = \\frac{1}{1 + e^{(E - E_{\\mathrm{F}})/(k_B T)}}", "f(E) = \\frac{1}{1 + e^{(E - E_{\\mathrm{F}})/(k_{\\mathrm{B}} T)}}", "f(E) = \\frac{1}{1 + e^{(E - E_F)/(k_B T)}}", "f(E) = \\frac{1}{1 + e^{(E - E_F)/(k_{\\mathrm{B}} T)}}", "f(E) = \\frac{1}{1 + e^{\\frac{E - E_{\\mathrm{F}}}{k_B T}}}", "f(E) = \\frac{1}{1 + e^{\\frac{E - E_{\\mathrm{F}}}{k_{\\mathrm{B}} T}}}", "f(E) = \\frac{1}{1 + e^{\\frac{E - E_F}{k_B T}}}", "f(E) = \\frac{1}{1 + e^{\\frac{E - E_F}{k_{\\mathrm{B}} T}}}"], "hint": "Put the whole exponent in braces after ^, and keep the whole k_B T in the denominator: /(k_B T), or a fraction \\frac{E - E_{\\mathrm{F}}}{k_B T}. The F label is upright: E_{\\mathrm{F}}."}, {"t": "Oxide growth (Deal-Grove)", "d": "Oxide thickness against time.", "src": "x_{\\mathrm{ox}}^2 + A x_{\\mathrm{ox}} = B (t + \\tau)", "alts": [], "hint": "A two-letter subscript needs braces, and a word label is upright: x_{\\mathrm{ox}}. \\tau is the Greek letter tau."}], FIXES=[{"goal": "Which change prints the unit upright, with the right space?", "code": "The oxide is $t = 50 nm$ thick.", "show": "t = 50 nm", "err": "", "opts": ["Write $t = 50 \\textit{nm}$", "Write $t = \\qty{50}{\\nano\\metre}$ (siunitx)", "Write $t = 50nm$", "Write $t = 50^{nm}$"], "ok": 1, "why": "In math mode, n and m are read as two variables and set in italics. \\qty from siunitx prints the number and an upright unit with the right space between them."}, {"goal": "Which change makes the whole word Fermi the subscript, upright?", "code": "The Fermi level $E_Fermi$ lies near midgap.", "show": "E_Fermi", "err": "", "opts": ["Write $E\\_Fermi$", "Write $E^{Fermi}$", "Write $E_{\\mathrm{Fermi}}$", "Write $E_{F}ermi$"], "ok": 2, "why": "A subscript takes one character unless you use braces. \\mathrm makes a word label upright."}, {"goal": "Which change puts the whole -E/(kT) in the exponent?", "code": "The ratio falls as $e^-E/(kT)$.", "show": "e^-E/(kT)", "err": "", "opts": ["Write $e^{-E/(kT)}$", "Write $e^(-E/(kT))$", "Write $e^-{E/(kT)}$", "Write $e\\^{-E/(kT)}$"], "ok": 0, "why": "^ raises only the next character. Braces raise the whole group."}, {"goal": "Which change makes the reference print the equation number?", "code": "\\begin{equation}\n  R_s = \\rho / t\n  \\label{eq:sheet}\n\\end{equation}\nAs Eq.~\\eqref{eq:sheets} shows,", "show": "", "err": "The PDF shows: As Eq. (??) shows,", "opts": ["Replace \\eqref with \\cite", "Change \\eqref{eq:sheets} to \\eqref{eq:sheet}", "Move \\label above \\begin{equation}", "Add \\usepackage{hyperref}"], "ok": 1, "why": "?? means the reference has not resolved. Here the cause is the names: \\label and \\eqref must match exactly. In general, also check that the document compiled without errors, and recompile."}, {"goal": "Which change fixes it while keeping both lines in one align?", "code": "\\begin{align}\n  R &= \\rho L / (W t) \\\\\n\n  R_s &= \\rho / t\n\\end{align}", "show": "", "err": "! Paragraph ended before \\align was complete.", "opts": ["Delete the blank line inside align", "Add a second blank line", "Replace \\\\ with a blank line", "Put each line in its own $...$"], "ok": 0, "why": "A blank line starts a new paragraph, which is not allowed inside align or equation."}, {"goal": "Which change lines up the three lines at their = signs?", "code": "\\begin{align*}\n  R = \\rho L / (W t) \\\\\n  = (\\rho / t)(L / W) \\\\\n  = R_s L / W\n\\end{align*}", "show": "\\begin{align*} R = \\rho L / (W t) \\\\ = (\\rho / t)(L / W) \\\\ = R_s L / W \\end{align*}", "err": "", "opts": ["Put & after each \\\\", "Add \\centering before the first line", "Put & just before each = sign", "Write each line inside \\[ ... \\]"], "ok": 2, "why": "In align, & marks the point to line up. Put it just before each = sign."}];
 var ok=typeof katex!=='undefined';
 if(!ok){document.getElementById('nokatex').style.display='block'}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function render(src,display){if(!ok)return '<span class="mono">'+esc(src)+'</span>';try{return katex.renderToString(src,{displayMode:!!display,throwOnError:true})}catch(e){return '<span class="warn">'+esc(String(e.message||e).replace(/^KaTeX parse error: /,'Not valid yet: '))+'</span>'}}
-function mml(src){try{var h=katex.renderToString(src,{output:'mathml',throwOnError:true});return h.replace(/<annotation[\s\S]*?<\/annotation>/g,'').replace(/\s+/g,'')}catch(e){return null}}
+function mmlRaw(src){return katex.renderToString(src,{output:'mathml',throwOnError:true})}
+var KEEP={mathvariant:1};
+function canon(node){ // canonical text of a normalized MathML node
+ if(node.nodeType===3)return node.nodeValue.replace(/\s+/g,'');
+ var t=node.localName,a=node.getAttribute&&node.getAttribute('mathvariant');
+ return '<'+t+(a?' '+a:'')+'>'+[].map.call(node.childNodes,canon).join('')+'</'+t+'>'}
+function normalize(el){ // drop spacing, annotations and presentational attributes; flatten groups that change nothing
+ var kids=[].slice.call(el.childNodes);
+ kids.forEach(function(c){if(c.nodeType===1)normalize(c);else if(c.nodeType===3&&!c.nodeValue.trim())el.removeChild(c)});
+ [].slice.call(el.childNodes).forEach(function(c){
+  if(c.nodeType!==1)return;var t=c.localName;
+  if(t==='annotation'||t==='mspace'||(t==='mtext'&&!c.textContent.replace(/\s| /g,''))){el.removeChild(c);return}
+  [].slice.call(c.attributes).forEach(function(at){if(!KEEP[at.name])c.removeAttribute(at.name)});
+ });
+ [].slice.call(el.childNodes).forEach(function(c){
+  if(c.nodeType!==1||c.localName!=='mrow')return;
+  var row=/^(mrow|semantics|math)$/.test(el.localName);
+  if(row||c.childNodes.length===1){while(c.firstChild)el.insertBefore(c.firstChild,c);el.removeChild(c)}
+ });
+ return el}
+function mml(src){try{var d=new DOMParser().parseFromString(mmlRaw(src).replace(/^<span[^>]*>|<\/span>$/g,''),'text/html');var m=d.querySelector('math');if(!m)return null;var n;do{n=canon(m);normalize(m)}while(canon(m)!==n);return canon(m)}catch(e){return null}}
+function parseError(src){try{mmlRaw(src);return null}catch(e){return String(e.message||e).replace(/^KaTeX parse error: /,'')}}
 function same(a,b){var x=mml(a),y=mml(b);return x!==null&&x===y}
-window.T2={same:same,mml:mml,TARGETS:TARGETS};
+window.T2={same:same,mml:mml,TARGETS:TARGETS,FIXES:FIXES};
 var host=document.getElementById('targets'),done={};
+function score(){document.getElementById('tscore').textContent='Equations checked right: '+Object.keys(done).length+' of '+TARGETS.length+'.'}
 TARGETS.forEach(function(t,k){
  var d=document.createElement('div');d.className='tgt';
  d.innerHTML='<h3>'+(k+1)+'. '+esc(t.t)+'</h3><p class="d">'+esc(t.d)+'</p><p class="lab2">Target</p><div class="show">'+render(t.src,true)+'</div>'+
@@ -108,13 +131,15 @@ TARGETS.forEach(function(t,k){
   '<p class="lab2">Your preview</p><div class="show prev" aria-live="polite"></div><div class="row"><button type="button" class="checkbtn">Check</button><button type="button" class="alt hint">Hint</button><button type="button" class="alt ans">Show an answer</button></div><div class="fb" role="status" aria-live="polite"></div>';
  host.appendChild(d);
  var inp=d.querySelector('input'),prev=d.querySelector('.prev'),fb=d.querySelector('.fb'),tm;
- inp.addEventListener('input',function(){clearTimeout(tm);tm=setTimeout(function(){prev.innerHTML=inp.value.trim()?render(inp.value,true):''},120)});
+ inp.addEventListener('input',function(){clearTimeout(tm);tm=setTimeout(function(){prev.innerHTML=inp.value.trim()?render(inp.value,true):''},120);
+  if(fb.textContent&&fb.className!=='fb chg'){fb.className='fb chg';fb.textContent='Changed: press Check again.';if(done[k]){delete done[k];score()}}});
  d.querySelector('.checkbtn').onclick=function(){
   var v=inp.value.trim();if(!v){fb.className='fb no';fb.textContent='Type your LaTeX first.';return}
   var good=[t.src].concat(t.alts).some(function(s){return same(v,s)});
   if(good){done[k]=1;fb.className='fb ok';fb.textContent='Right: your LaTeX gives the same result as the target.'}
-  else{delete done[k];fb.className='fb no';fb.textContent='Not yet: compare your preview with the target. '+t.hint}
-  document.getElementById('tscore').textContent='Equations built: '+Object.keys(done).length+' of '+TARGETS.length+'.';
+  else{delete done[k];var pe=parseError(v);fb.className='fb no';
+   fb.textContent=pe?'LaTeX would not accept this yet ('+pe+'). '+t.hint:'This does not match a form the checker recognizes. Compare your preview with the target: if they look the same, your LaTeX is probably fine, and Show an answer gives one accepted form. If they differ: '+t.hint}
+  score();
  };
  d.querySelector('.hint').onclick=function(){fb.className='fb no';fb.textContent=t.hint};
  d.querySelector('.ans').onclick=function(){fb.className='fb ok';fb.innerHTML='One answer: <span class="mono">'+esc(t.src)+'</span>'};
@@ -128,6 +153,7 @@ FIXES.forEach(function(it,k){
  var opts=it.opts.map(function(o,j){return '<label class="opt"><input type="radio" name="f'+k+'" value="'+j+'"><span class="mono">'+esc(o)+'</span></label>'}).join('');
  d.innerHTML='<h3>Snippet '+(k+1)+' of '+FIXES.length+'</h3><pre aria-label="Code">'+code+'</pre>'+shown+err+'<fieldset><legend>'+esc(it.goal)+'</legend>'+opts+'</fieldset><button type="button">Check</button><div class="fb" role="status" aria-live="polite"></div>';
  fh.appendChild(d);
+ d.querySelectorAll('input').forEach(function(r){r.addEventListener('change',function(){var fb=d.querySelector('.fb');if(!fb.textContent)return;d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});fb.className='fb chg';fb.textContent='Changed: press Check again.';if(right[k]){delete right[k];document.getElementById('fscore').textContent='You have '+Object.keys(right).length+' of '+FIXES.length+' right.'}})});
  d.querySelector('button').onclick=function(){
   var sel=d.querySelector('input:checked'),fb=d.querySelector('.fb');
   d.querySelectorAll('.opt').forEach(function(o){o.classList.remove('right','wrong')});
